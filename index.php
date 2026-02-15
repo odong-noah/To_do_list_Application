@@ -1,16 +1,10 @@
 <?php
-
 session_start();
 
 require_once 'config/auth_guard.php';
 require_once 'config/dataconnect.php';
-require_once 'get_task.php';
-
+require_once 'Controllers/get_task.php';
 ?>
-
-
-
-
 
 <!DOCTYPE html>
 <html lang="en">
