@@ -1,0 +1,119 @@
+/* ===== Background & Centering ===== */
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(rgba(15,23,42,0.75), rgba(15,23,42,0.75)),
+                url('https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=1920')
+                no-repeat center center fixed;
+    background-size: cover;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.login-wrapper {
+    width: 100%;
+    max-width: 550px;
+    padding: 20px;
+}
+
+.glass-card {
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    padding: 55px 45px;
+    color: white;
+    text-align: center;
+}
+
+/* ===== Labels ===== */
+label {
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+/* ===== Inputs ===== */
+.form-control {
+    background: rgba(255,255,255,0.15);
+    border: none;
+    color: white;
+    text-align: left;
+    padding-left: 10px;
+}
+
+.form-control::placeholder {
+    color: rgba(255,255,255,0.7);
+}
+
+.form-control:focus {
+    background: rgba(255,255,255,0.2);
+    color: white;
+    box-shadow: none;
+}
+
+/* ===== Input Icons ===== */
+.input-group-text {
+    background: rgba(255,255,255,0.15);
+    border: none;
+}
+
+.icon-user { color: #38bdf8; }
+.icon-lock { color: #facc15; }
+
+/* ===== Button ===== */
+.btn-login {
+    background: linear-gradient(135deg, #2563eb, #06b6d4);
+    border: none;
+    font-weight: 600;
+    letter-spacing: 1px;
+    transition: 0.3s ease;
+}
+
+.btn-login:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+}
+
+/* ===== Links ===== */
+.signup-link {
+    color: #38bdf8;
+    text-decoration: none;
+}
+
+.signup-link:hover {
+    text-decoration: underline;
+}
+
+.eye-icon {
+    color: #facc15;
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+/* ===== Password Strength Meter ===== */
+.strength-meter {
+    height: 6px;
+    width: 100%;
+    background: rgba(255,255,255,0.2);
+    border-radius: 4px;
+    margin-top: 5px;
+    overflow: hidden;
+}
+
+.strength-meter-fill {
+    height: 100%;
+    width: 0%;
+    background: red;
+    border-radius: 4px;
+    transition: width 0.3s ease, background 0.3s ease;
+}
+
+.strength-text {
+    text-align: left;
+    font-size: 0.85rem;
+    margin-top: 2px;
+}

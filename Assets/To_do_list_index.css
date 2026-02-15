@@ -1,0 +1,121 @@
+
+.sticky-note {
+    background-color: #fff9db;
+    border-radius: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sticky-note:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+
+
+
+        body {
+            background-color: #f4f6f9;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            height: 100vh;
+            background: #ffffff;
+            border-right: 1px solid #e9ecef;
+        }
+
+        .sidebar .nav-link {
+            color: #6c757d;
+            font-weight: 500;
+        }
+
+        .sidebar .nav-link.active,
+        .sidebar .nav-link:hover {
+            background-color: #f1f3f5;
+            border-radius: 8px;
+            color: #000;
+        }
+
+        /* Tasks */
+        .task-item {
+            border-radius: 10px;
+            transition: 0.2s ease;
+        }
+
+        .task-item:hover {
+            background-color: #f8f9fa;
+            cursor: pointer;
+        }
+
+        .task-item.active {
+            background-color: #eef2ff;
+            border-left: 4px solid #4e73df;
+        }
+
+        /* Right panel */
+        .right-panel {
+            background: #ffffff;
+            border-left: 1px solid #e9ecef;
+            height: 100vh;
+        }
+
+        .header-title {
+            font-weight: 600;
+        }
+
+        .btn-save {
+            background-color: #ffc107;
+            border: none;
+        }
+
+        .btn-save:hover {
+            background-color: #e0a800;
+        }
+
+        /* Mobile offcanvas width */
+        .offcanvas {
+            width: 280px;
+        }
+        /* ===== Edit Account Modal Enhancements ===== */
+.edit-input .input-group-text {
+    background: #f1f3f5;
+    border: none;
+    font-size: 1.1rem;
+}
+
+.edit-input input {
+    border: none;
+    background: #f8f9fa;
+    padding: 0.65rem 0.75rem;
+}
+
+.edit-input input:focus {
+    box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.15);
+    background: #fff;
+}
+
+.edit-input .input-group {
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #dee2e6;
+}
+
+.modal-content {
+    box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+}
+
+@media (max-width: 767.98px) {
+    .nav-link {
+        padding-top: 10px;
+        padding-bottom: 10px;
+        color: #495057;
+    }
+    .nav-link.active {
+        color: #0d6efd !important;
+        font-weight: 600;
+    }
+    /* Prevents content from being hidden under the sticky mobile bar */
+    body {
+        padding-top: 0;
+    }
+}
