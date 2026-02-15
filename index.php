@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 
 require_once 'config/auth_guard.php';
@@ -25,9 +26,7 @@ require_once 'get_task.php';
 
 <body>
 
-<!-- ==========================================
-     MOBILE NAVIGATION BAR
-     ========================================== -->
+<!--MOBILE NAVIGATION BAR -->
 <nav class="navbar navbar-light bg-white border-bottom d-md-none px-3">
     <button class="btn btn-outline-secondary" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar">
         <i class="bi bi-list"></i>
@@ -35,9 +34,8 @@ require_once 'get_task.php';
     <span class="fw-semibold">Dashboard</span>
 </nav>
 
-<!-- ==========================================
-     MOBILE OFFCANVAS MENU
-     ========================================== -->
+
+<!--MOBILE OFFCANVAS MENU-->
 <div class="offcanvas offcanvas-start d-md-none" tabindex="-1" id="mobileSidebar" aria-labelledby="mobileSidebarLabel">
     <div class="offcanvas-header border-bottom">
         <h5 class="offcanvas-title fw-bold text-primary" id="mobileSidebarLabel">Menu</h5>
@@ -84,9 +82,8 @@ require_once 'get_task.php';
 <div class="container-fluid">
     <div class="row">
 
-        <!-- ==========================================
-             COLUMN 1: DESKTOP SIDEBAR
-             ========================================== -->
+
+        <!--COLUMN 1: DESKTOP SIDEBAR-->
         <div class="col-md-3 col-lg-2 p-4 sidebar d-none d-md-block border-end vh-100">
             <h5 class="fw-bold mb-4 text-primary"><i class="bi bi-check2-square me-2"></i>To-Do Menu</h5>
             <input type="text" class="form-control mb-4" placeholder="Search tasks...">
@@ -97,6 +94,7 @@ require_once 'get_task.php';
                 <li class="nav-item"><a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#calendarModal"><i class="bi bi-calendar3 me-2"></i>Calendar</a></li>
                 <li class="nav-item"><a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#stickyWallModal"><i class="bi bi-stickies me-2"></i>Sticky Wall</a></li>
             </ul>
+
 
             <small class="text-muted fw-bold mb-4">LISTS</small>
             <ul class="nav flex-column mb-4">
@@ -126,9 +124,9 @@ require_once 'get_task.php';
             </div>
         </div>
 
-        <!-- ==========================================
-             COLUMN 2: MAIN TASK PANEL (Center)
-             ========================================== -->
+
+
+        <!--MAIN TASK PANEL (Center)-->
         <div class="col-md-5 col-lg-6 p-4 bg-light overflow-auto vh-100">
             <div class="mb-4">
                 <h3 class="fw-bold text-dark">Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?>!</h3>
@@ -169,9 +167,7 @@ require_once 'get_task.php';
             </div>
         </div>
 
-        <!-- ==========================================
-             COLUMN 3: RIGHT PANEL (Work/Personal separation)
-             ========================================== -->
+        <!--COLUMN 3: RIGHT PANEL (Work/Personal separation)-->
         <div class="col-md-4 col-lg-4 p-4 border-start bg-white vh-100 overflow-auto">
             
             <div class="mb-5">
@@ -211,8 +207,9 @@ require_once 'get_task.php';
 </div> 
 
 
-    <!-- MODAL IMPORTS-->
-    
+   
+
+<!-- MODAL IMPORTS-->
 <?php
     include 'Modals/To_do_list_index_stickywall.php'; 
     include 'Modals/To_do_list_index_calender.php';
