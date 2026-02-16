@@ -2,6 +2,7 @@
 require_once 'config/dataconnect.php';
 require_once 'config/auth_guard.php';
 require_once 'actions/get_task.php';
+
 ?>
 
 <!DOCTYPE html>
@@ -33,6 +34,18 @@ require_once 'actions/get_task.php';
         <h5 class="offcanvas-title fw-bold text-primary" id="mobileSidebarLabel">Menu</h5>
         <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
+
+    <div class="mb-3 px-3">
+    <label for="taskSearch" class="form-label small fw-bold text-muted">SEARCH TASKS</label>
+    <div class="input-group mb-5 shadow-sm rounded-4 overflow-hidden">
+        <input type="text" id="taskSearch" class="form-control py-2" placeholder="Search for a specific task title..." autocomplete="off">
+        <button class="btn btn-info text-white px-4 fw-bold" type="button" id="searchBtn">
+            Search
+        </button>
+    </div>
+</div>
+
+
     <div class="offcanvas-body">
         <ul class="nav flex-column mb-4">
             <li class="nav-item mb-2">
@@ -78,8 +91,18 @@ require_once 'actions/get_task.php';
         <!--COLUMN 1: DESKTOP SIDEBAR-->
         <div class="col-md-3 col-lg-2 p-4 sidebar d-none d-md-block border-end vh-100">
             <h5 class="fw-bold mb-4 text-primary"><i class="bi bi-check2-square me-2"></i>To-Do Menu</h5>
-            <input type="text" class="form-control mb-4" placeholder="Search tasks...">
 
+
+               <!--search task-->
+<div class="mb-3 px-3">
+    <label for="taskSearch" class="form-label small fw-bold text-muted">SEARCH TASKS</label>
+    <div class="input-group mb-5 shadow-sm rounded-4 overflow-hidden">
+        <input type="text" id="taskSearch" class="form-control py-2" placeholder="Search for a specific task title..." autocomplete="off">
+        <button class="btn btn-info text-white px-4 fw-bold" type="button" id="searchBtn">
+            Search
+        </button>
+    </div>
+</div>
             <small class="text-muted fw-bold">TASKS</small>
             <ul class="nav flex-column mb-4">
                 <li class="nav-item"><a class="nav-link active" href="#"><i class="bi bi-calendar-day me-2"></i>Tasks</a></li>
@@ -227,12 +250,14 @@ echo "
 
 <!-- MODAL IMPORTS-->
 <?php
+  
     include 'modals/To_do_list_index_stickywall.php'; 
     include 'modals/To_do_list_index_calender.php';
     include 'modals/To_do_list_logout_modal.php';
     include 'modals/To_do_list_add_task.php';
     include 'modals/To_do_list_delete_task.php';
     include 'modals/To_do_list_edit_account.php';
+    include 'modals/To_do_list_search_modal.php';
 ?>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
