@@ -18,27 +18,38 @@
     </div>
 </div>
 
-<!--Search result Logic-->
+
+<!--logic for the search task model-->
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-    const searchBtn = document.getElementById('searchBtn');
-    const searchInput = document.getElementById('taskSearch');
+document.addEventListener('DOMContentLoaded', function() {
+    // Shared Modal Elements
     const resultBody = document.getElementById('searchResultBody');
     const modalEl = document.getElementById('searchResultModal');
+    
+    // Search Area 1 (Original)
+    const searchBtn1 = document.getElementById('searchBtn');
+    const searchInput1 = document.getElementById('taskSearch');
 
-    if (searchBtn && modalEl) {
+    // Search Area 2 (New - e.g., in a Navbar or Sidebar)
+    const searchBtn2 = document.getElementById('searchBtn2'); 
+    const searchInput2 = document.getElementById('taskSearch2');
+
+    if (modalEl) {
         const resultModal = new bootstrap.Modal(modalEl);
 
-        const performSearch = function() {
-            const keyword = searchInput.value.trim();
+        // Core Search Function: Takes the specific input element as an argument
+        const performSearch = function(inputElement) {
+            if (!inputElement) return;
+            
+            const keyword = inputElement.value.trim();
             if (keyword === "") return;
 
             // 1. Immediate Feedback
             resultBody.innerHTML = '<div class="text-center py-4"><div class="spinner-border text-info"></div></div>';
             resultModal.show();
 
-            // 2. Clear the input immediately for new content (House Standard)
-            searchInput.value = '';
+            // 2. Clear the specific input used
+            inputElement.value = '';
 
             // 3. High-performance Network Request
             const xhr = new XMLHttpRequest();
@@ -56,15 +67,21 @@
             xhr.send();
         };
 
-        // Trigger on Button Click
-        searchBtn.addEventListener('click', performSearch);
+        // --- LISTENERS FOR SEARCH AREA 1 ---
+        if (searchBtn1 && searchInput1) {
+            searchBtn1.addEventListener('click', () => performSearch(searchInput1));
+            searchInput1.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') performSearch(searchInput1);
+            });
+        }
 
-        // Trigger on Enter Key (Professional UX Upgrade)
-        searchInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                performSearch();
-            }
-        });
+        // --- LISTENERS FOR SEARCH AREA 2 ---
+        if (searchBtn2 && searchInput2) {
+            searchBtn2.addEventListener('click', () => performSearch(searchInput2));
+            searchInput2.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') performSearch(searchInput2);
+            });
+        }
     }
 });
 </script>

@@ -97,8 +97,8 @@ require_once 'actions/get_task.php';
 <div class="mb-3 px-3">
     <label for="taskSearch" class="form-label small fw-bold text-muted">SEARCH TASKS</label>
     <div class="input-group mb-5 shadow-sm rounded-4 overflow-hidden">
-        <input type="text" id="taskSearch" class="form-control py-2" placeholder="Search for a specific task title..." autocomplete="off">
-        <button class="btn btn-info text-white px-4 fw-bold" type="button" id="searchBtn">
+        <input type="text" id="taskSearch2" class="form-control py-2" placeholder="Search for a specific task title..." autocomplete="off">
+        <button class="btn btn-info text-white px-4 fw-bold" type="button" id="searchBtn2">
             Search
         </button>
     </div>
