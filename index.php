@@ -121,81 +121,105 @@ require_once 'actions/get_task.php';
 
 
         <!--MAIN TASK PANEL (Center)-->
-        <div class="col-md-5 col-lg-6 p-4 bg-light overflow-auto vh-100">
-            <div class="mb-4">
-                <h3 class="fw-bold text-dark">Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?>!</h3>
-            </div>
+       <?php
+echo "
+<div class=\"col-md-5 col-lg-6 p-4 bg-light overflow-auto vh-100\">
+    <div class=\"mb-4\">
+        <h3 class=\"fw-bold text-dark\">Welcome, " . htmlspecialchars($_SESSION['username']) . "!</h3>
+    </div>
 
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h5 class="fw-bold mb-0 text-info"><i class="bi bi-list-task me-2"></i>Your Tasks</h5>
-                <button class="btn btn-primary btn-sm rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#addTaskModal">
-                    <i class="bi bi-plus-lg me-1"></i> New Task
-                </button>
-            </div>
+    <div class=\"d-flex justify-content-between align-items-center mb-4\">
+        <h5 class=\"fw-bold mb-0 text-info\"><i class=\"bi bi-list-task me-2\"></i>Your Tasks</h5>
+        <button class=\"btn btn-primary btn-sm rounded-pill px-3\" data-bs-toggle=\"modal\" data-bs-target=\"#addTaskModal\">
+            <i class=\"bi bi-plus-lg me-1\"></i> New Task
+        </button>
+    </div>
 
-            <div class="list-group">
-                <?php if (empty($userTasks)) { ?>
-                    <div class="text-center py-5 bg-white border rounded-4 shadow-sm">
-                        <i class="bi bi-clipboard-x text-muted opacity-50" style="font-size: 4rem;"></i>
-                        <h5 class="text-muted mt-3">No tasks found</h5>
-                    </div>
-                <?php } else { 
-                    foreach ($userTasks as $task) { ?>
-                        <div class="list-group-item border-0 shadow-sm rounded-4 mb-3 p-3 bg-white">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="d-flex align-items-center">
-                                    <input class="form-check-input me-3 border-primary" type="checkbox">
-                                    <span class="fw-bold text-dark"><?php echo htmlspecialchars($task['to_do_list_task_title']); ?></span>
-                                </div>
-                                <i class="bi bi-chevron-down text-muted cursor-pointer" data-bs-toggle="collapse" data-bs-target="#details_<?php echo $task['to_do_list_task_id']; ?>"></i>
-                            </div>
-                            <div id="details_<?php echo $task['to_do_list_task_id']; ?>" class="collapse mt-3 ps-4 border-start border-2 border-info">
-                                <p class="small text-muted mb-2"><?php echo htmlspecialchars($task['to_do_list_task_description']); ?></p>
-                                <div class="d-flex gap-2">
-                                    <span class="badge bg-light text-primary border small">Due: <?php echo $task['to_do_list_task_date']; ?></span>
-                                    <span class="badge bg-info-subtle text-info border small"><?php echo htmlspecialchars($task['to_do_list_task_category']); ?></span>
-                                </div>
-                            </div>
+    <div class=\"list-group\">";
+
+        if (empty($userTasks)) {
+            echo "
+            <div class=\"text-center py-5 bg-white border rounded-4 shadow-sm\">
+                <i class=\"bi bi-clipboard-x text-muted opacity-50\" style=\"font-size: 4rem;\"></i>
+                <h5 class=\"text-muted mt-3\">No tasks found</h5>
+            </div>";
+        } else { 
+            foreach ($userTasks as $task) {
+                echo "
+                <div class=\"list-group-item border-0 shadow-sm rounded-4 mb-3 p-3 bg-white\">
+                    <div class=\"d-flex justify-content-between align-items-center\">
+                        <div class=\"d-flex align-items-center\">
+                            <input class=\"form-check-input me-3 border-primary\" type=\"checkbox\">
+                            <span class=\"fw-bold text-dark\">" . htmlspecialchars($task['to_do_list_task_title']) . "</span>
                         </div>
-                <?php } } ?>
-            </div>
-        </div>
+                        <i class=\"bi bi-chevron-down text-muted cursor-pointer\" data-bs-toggle=\"collapse\" data-bs-target=\"#details_" . $task['to_do_list_task_id'] . "\"></i>
+                    </div>
+                    <div id=\"details_" . $task['to_do_list_task_id'] . "\" class=\"collapse mt-3 ps-4 border-start border-2 border-info\">
+                        <p class=\"small text-muted mb-2\">" . htmlspecialchars($task['to_do_list_task_description']) . "</p>
+                        <div class=\"d-flex gap-2\">
+                            <span class=\"badge bg-light text-primary border small\">Due: " . $task['to_do_list_task_date'] . "</span>
+                            <span class=\"badge bg-info-subtle text-info border small\">" . htmlspecialchars($task['to_do_list_task_category']) . "</span>
+                        </div>
+                    </div>
+                </div>";
+            }
+        }
+
+echo "
+    </div>
+</div>";
+?>
+
 
         <!--COLUMN 3: RIGHT PANEL (Work/Personal separation)-->
         <div class="col-md-4 col-lg-4 p-4 border-start bg-white vh-100 overflow-auto">
-            
-            <div class="mb-5">
-                <h5 class="fw-bold mb-4 text-primary"><i class="bi bi-briefcase me-2"></i>Work Tasks</h5>
-                <?php 
-                $workTasks = array_filter($userTasks, function($t) { return strtolower($t['to_do_list_task_category']) === 'work'; });
-                if (empty($workTasks)) { ?>
-                    <div class="category-empty text-muted small">No work tasks found.</div>
-                <?php } else {
-                    foreach ($workTasks as $wTask) { ?>
-                        <div class="p-3 bg-light rounded-3 mb-2 d-flex justify-content-between align-items-center">
-                            <span class="small fw-bold text-dark"><?php echo htmlspecialchars($wTask['to_do_list_task_title']); ?></span>
-                            <small class="text-muted"><?php echo $wTask['to_do_list_task_date']; ?></small>
-                        </div>
-                <?php } } ?>
-            </div>
+    
+    <div class="mb-5">
+        <h5 class="fw-bold mb-4 text-primary"><i class="bi bi-briefcase me-2"></i>Work Tasks</h5>
+        <?php 
+        $workTasks = array_filter($userTasks, function($t) { 
+            return strtolower($t['to_do_list_task_category']) === 'work'; 
+        });
 
-            <hr class="my-4 opacity-25">
+        if (empty($workTasks)) {
+            echo "<div class=\"category-empty text-muted small\">No work tasks found.</div>";
+        } else {
+            foreach ($workTasks as $wTask) {
+                echo "
+                <div class=\"p-3 bg-light rounded-3 mb-2 d-flex justify-content-between align-items-center\">
+                    <span class=\"small fw-bold text-dark\">" . htmlspecialchars($wTask['to_do_list_task_title']) . "</span>
+                    <small class=\"text-muted\">" . $wTask['to_do_list_task_date'] . "</small>
+                </div>";
+            }
+        } 
+        ?>
+    </div>
 
-            <div class="mb-5">
-                <h5 class="fw-bold mb-4 text-success"><i class="bi bi-person me-2"></i>Personal Tasks</h5>
-                <?php 
-                $personalTasks = array_filter($userTasks, function($t) { return strtolower($t['to_do_list_task_category']) === 'personal'; });
-                if (empty($personalTasks)) { ?>
-                    <div class="category-empty text-muted small">No personal tasks found.</div>
-                <?php } else {
-                    foreach ($personalTasks as $pTask) { ?>
-                        <div class="p-3 bg-light rounded-3 mb-2 d-flex justify-content-between align-items-center">
-                            <span class="small fw-bold text-dark"><?php echo htmlspecialchars($pTask['to_do_list_task_title']); ?></span>
-                            <small class="text-muted"><?php echo $pTask['to_do_list_task_date']; ?></small>
-                        </div>
-                <?php } } ?>
-            </div>
-        </div>
+    <hr class="my-4 opacity-25">
+
+    <div class="mb-5">
+        <h5 class="fw-bold mb-4 text-success"><i class="bi bi-person me-2"></i>Personal Tasks</h5>
+        <?php 
+        $personalTasks = array_filter($userTasks, function($t) { 
+            return strtolower($t['to_do_list_task_category']) === 'personal'; 
+        });
+
+        if (empty($personalTasks)) {
+            echo "<div class=\"category-empty text-muted small\">No personal tasks found.</div>";
+        } else {
+            foreach ($personalTasks as $pTask) {
+                echo "
+                <div class=\"p-3 bg-light rounded-3 mb-2 d-flex justify-content-between align-items-center\">
+                    <span class=\"small fw-bold text-dark\">" . htmlspecialchars($pTask['to_do_list_task_title']) . "</span>
+                    <small class=\"text-muted\">" . $pTask['to_do_list_task_date'] . "</small>
+                </div>";
+            }
+        } 
+        ?>
+    </div>
+</div>
+      
+
 
     </div> 
 </div> 
