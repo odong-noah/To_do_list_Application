@@ -36,7 +36,7 @@
 
 
 
-
+<!--javascript logic for the Logout modal-->
 <script>
 {
     const confirmBtn = document.getElementById('confirmLogout');

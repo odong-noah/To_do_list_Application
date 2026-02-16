@@ -62,6 +62,7 @@
 
 
 
+<!--Javascript logic for the add task API-->
 <script>
 {
     const addTaskForm = document.getElementById('addTaskForm');

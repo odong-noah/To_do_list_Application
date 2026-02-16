@@ -13,6 +13,7 @@ if (isset($conn) && isset($_SESSION['user_id'])) {
 }
 ?>
 
+
 <!-- Add sticker modal -->
 <div class="modal fade" id="stickyWallModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
@@ -90,6 +91,7 @@ if (isset($conn) && isset($_SESSION['user_id'])) {
 </div>
 
 
+<!--Javascript logic for the add Sticker API-->
 <script>
 {
     const stickerForm = document.getElementById('stickerPostForm');
