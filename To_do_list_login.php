@@ -1,4 +1,4 @@
-<?php require_once 'config/dataconnect.php'?>
+<?php require_once 'config/dataconnect.php';?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -12,7 +12,6 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="Assets/To_do_list_login.css">
 </head>
-
 
 <body>
 <div class="login-wrapper">
