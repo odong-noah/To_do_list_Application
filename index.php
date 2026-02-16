@@ -1,8 +1,6 @@
 <?php
-session_start();
-
-require_once 'config/auth_guard.php';
 require_once 'config/dataconnect.php';
+require_once 'config/auth_guard.php';
 require_once 'actions/get_task.php';
 ?>
 
@@ -19,7 +17,7 @@ require_once 'actions/get_task.php';
 </head>
 
 <body>
-
+    
 <!--MOBILE NAVIGATION BAR -->
 <nav class="navbar navbar-light bg-white border-bottom d-md-none px-3">
     <button class="btn btn-outline-secondary" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar">
