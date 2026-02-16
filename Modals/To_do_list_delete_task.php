@@ -29,6 +29,7 @@
     </div>
 </div>
 
+
 <script>
     const addTaskForm = document.getElementById('addTaskForm');
     const successToast = new bootstrap.Toast(document.getElementById('successToast'));

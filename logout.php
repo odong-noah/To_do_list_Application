@@ -1,12 +1,15 @@
 <?php
-session_start();
+require_once '../config/dataconnect.php';
+
 // Clear all session variables
 $_SESSION = [];
+
 // Destroy the session on the server
 if (session_id() != "" || isset($_COOKIE[session_name()])) {
     session_destroy();
 }
-//Destroy the session cookie in the browser
+
+// Destroy the session cookie in the browser
 if (ini_get("session.use_cookies")) {
     $p = session_get_cookie_params();
     setcookie(
@@ -19,6 +22,7 @@ if (ini_get("session.use_cookies")) {
         $p["httponly"]
     );
 }
-//Send the user back to the login page
+
+//High performance redirect
 header("Location: To_do_list_login.php");
 exit();

@@ -1,7 +1,6 @@
 <?php
 require_once '../config/dataconnect.php';
 
-// Prevent PHP from leaking HTML errors/warnings
 ini_set('display_errors', 0);
 error_reporting(E_ALL);
 
@@ -27,7 +26,7 @@ try {
         throw new Exception("Invalid Input Format");
     }
 
-    // --- Extraction and Sanitization (Logic preserved without ? symbols) ---
+   
     
     // Username logic
     $username = '';
@@ -91,10 +90,10 @@ try {
         exit;
     }
 
-    // 9. Secure Password Hashing
+    // Secure Password Hashing
     $hashedPassword = password_hash($password, PASSWORD_BCRYPT, ["cost" => 12]);
 
-    // 10. Insert (Using Named Parameters, NO question marks)
+    //Insert (Using Named Parameters, NO question marks)
     $insertUserStmt = $conn->prepare("
         INSERT INTO to_do_list_user 
             (to_do_list_user_username, to_do_list_user_email, to_do_list_user_password) 
@@ -116,16 +115,16 @@ try {
     }
 
 }  catch (Throwable $e) {
-    // Return error in JSON format
+
     echo json_encode([
         "success" => false, 
-        "message" => "DEBUG: " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine()
+        "message" => "ERROR jhfjjhkf"
     ]);
+    die();
 }
 
-/**
- * Helper function ensure it exists
- */
+ //Helper function ensure it exists
+
 if (!function_exists('clean_string')) {
     function clean_string($data) {
         return htmlspecialchars(strip_tags(trim($data)));

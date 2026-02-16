@@ -1,5 +1,6 @@
 <?php
 require_once '../config/dataconnect.php'; 
+
 header('Content-Type: application/json');
 session_start();
 
@@ -36,6 +37,7 @@ try {
     } else {
         echo json_encode(['success' => false, 'message' => 'Failed to save to database.']);
     }
-} catch (PDOException $e) {
-    echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
+} catch (Exception $e) {
+   
+    die("ERROR STK_DB_991HH");
 }

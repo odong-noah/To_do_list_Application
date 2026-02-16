@@ -1,10 +1,8 @@
 <?php
-
 require_once '../config/dataconnect.php';
 
 ini_set('display_errors', 0);
 error_reporting(E_ALL);
-
 
 //  Set Secure JSON Headers
 header('Content-Type: application/json; charset=utf-8');
@@ -19,7 +17,6 @@ if (session_status() === PHP_SESSION_NONE) {
         'cookie_samesite' => 'Strict'
     ]);
 }
-
 
 try {
     // Force POST Method
@@ -89,6 +86,7 @@ try {
         "success" => false, 
         "message" => "System Error: JDGHHF6BDHBJAB"
     ]);
+    die();
 }
 
 if (!function_exists('clean_string')) {

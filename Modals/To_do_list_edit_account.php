@@ -80,6 +80,7 @@
 
 
 
+
 <script>
 {
     const editForm = document.getElementById('editAccountForm');
@@ -87,7 +88,7 @@
     const successModalEl = document.getElementById('updateSuccessModal');
     const successText = document.getElementById('successMsgText');
 
-    //Show Error inside Input Modal
+    
     const showError = (msg) => {
         errorDiv.innerHTML = `
             <div class="alert alert-danger alert-dismissible fade show p-2 small" role="alert">
@@ -98,64 +99,67 @@
     };
 
     if (editForm) {
-        editForm.addEventListener('submit', async (e) => {
+        editForm.addEventListener('submit', (e) => {
             e.preventDefault();
             errorDiv.innerHTML = ''; 
 
             const btn = editForm.querySelector('button[type="submit"]');
-            const data = Object.fromEntries(new FormData(editForm).entries());
+            const formData = new FormData(editForm);
+            const data = JSON.stringify(Object.fromEntries(formData.entries()));
 
             // Simple Client Validations
-            if (data.new_password && data.new_password.length < 8) {
+            const payload = Object.fromEntries(formData.entries());
+            if (payload.new_password && payload.new_password.length < 8) {
                 return showError("Password must be 8+ characters.");
             }
-            if (data.new_password !== data.confirm_password) {
+            if (payload.new_password !== payload.confirm_password) {
                 return showError("Passwords do not match.");
             }
 
-            try {
-                btn.disabled = true;
-                btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Saving...';
+            //Loading state
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Saving...';
 
-                const response = await fetch('Controllers/To_do_list_edit_account_api.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
+            // Use Xmlhttprequests 
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "actions/To_do_list_edit_account_api.php", true);
+            xhr.setRequestHeader("Content-Type", "application/json");
 
-                const result = await response.json();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    btn.disabled = false;
+                    btn.innerHTML = 'Save Changes';
 
-                if (result.success) {
-                    //Hide the input modal
-                    bootstrap.Modal.getInstance(document.getElementById('editAccountModal')).hide();
-
-                    //Set text and show the CENTERED Success Modal
-                    successText.innerText = result.message;
-                    const sModal = new bootstrap.Modal(successModalEl);
-                    sModal.show();
-                } else {
-                    showError(result.message);
+                    if (xhr.status === 200) {
+                        try {
+                            const result = JSON.parse(xhr.responseText);
+                            if (result.success) {
+                                //Hide modal and trigger refresh/reload
+                                bootstrap.Modal.getInstance(document.getElementById('editAccountModal')).hide();
+                                successText.innerText = result.message;
+                                const sModal = new bootstrap.Modal(successModalEl);
+                                sModal.show();
+                            } else {
+                                showError(result.message);
+                            }
+                        } catch (e) {
+                            showError("System Error: JDGHHF6BDHBJAB");
+                        }
+                    } else {
+                        showError("System Error: JDGHHF6BDHBJAB");
+                    }
                 }
-            } catch (err) {
-                console.error(err);
-                showError("System Error: JDGHHF6BDHBJAB");
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = 'Save Changes';
-            }
+            };
+
+            xhr.send(data);
         });
     }
 
-    //close success modal, REFRESH
-    document.getElementById('successFinalBtn').addEventListener('click', () => {
-        window.location.reload();
-    });
+    //Rapid page reload logic
+    const refreshPage = () => { window.location.reload(); };
+    document.getElementById('successFinalBtn').addEventListener('click', refreshPage);
+    successModalEl.addEventListener('hidden.bs.modal', refreshPage);
 
-    successModalEl.addEventListener('hidden.bs.modal', () => {
-        window.location.reload();
-    });
-
-    //Reset logic for input modal
     document.getElementById('editAccountModal').addEventListener('show.bs.modal', () => {
         if (editForm) editForm.reset();
         errorDiv.innerHTML = '';

@@ -1,6 +1,6 @@
 
 <!-- LOGOUT CONFIRM MODAL-->
- 
+
 <div class="modal fade" id="logoutConfirmModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content rounded-4 shadow-lg">
@@ -33,20 +33,36 @@
         </div>
     </div>
 </div>
+
+
+
+
 <script>
+{
+    const confirmBtn = document.getElementById('confirmLogout');
+    
+    if (confirmBtn) {
+        confirmBtn.addEventListener('click', function () {
+            //Hide modal using Bootstrap instance
+            const modalElement = document.getElementById('logoutConfirmModal');
+            const modal = bootstrap.Modal.getInstance(modalElement);
+            if (modal) { modal.hide(); }
 
-    document.getElementById('confirmLogout').addEventListener('click', function () {
-        // 1. Hide the modal using the ID you specified
-        const modalElement = document.getElementById('logoutConfirmModal');
-        const modal = bootstrap.Modal.getInstance(modalElement);
-        
-        if (modal) {
-            modal.hide();
-        }
+            //Use Xmlhttprequest for actions 
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", "logout.php", true);
+            
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    // Fast redirect/reload once session is destroyed
+                    window.location.replace("To_do_list_login.php");
+                }
+            };
+            
+            xhr.send();
 
-        // 2. Redirect to your login page (or logout.php)
-         window.location.replace("logout.php"); 
-        // Optional feedback
-        console.log("User confirmed logout from logoutConfirmModal");
-    });
+           
+        });
+    }
+}
 </script>

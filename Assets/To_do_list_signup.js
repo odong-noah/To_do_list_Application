@@ -1,142 +1,138 @@
+//Element References
+var registerForm = document.getElementById('registerForm');
+var usernameInput = document.getElementById('username');
+var emailInput = document.getElementById('email');
+var passwordInput = document.getElementById('password');
+var confirmPasswordInput = document.getElementById('confirmPassword');
+var togglePassBtn = document.getElementById('togglePassBtn');
+var toggleConfirmPassBtn = document.getElementById('toggleConfirmPassBtn');
+var formMessageContainer = document.getElementById('formMessageContainer');
 
-// Element References with Safety Checks
-const registerForm = document.getElementById('registerForm');
-const usernameInput = document.getElementById('username');
-const emailInput = document.getElementById('email');
-const passwordInput = document.getElementById('password');
-const confirmPasswordInput = document.getElementById('confirmPassword');
-const togglePassBtn = document.getElementById('togglePassBtn');
-const toggleConfirmPassBtn = document.getElementById('toggleConfirmPassBtn');
-const formMessageContainer = document.getElementById('formMessageContainer');
+var eyeIcon = togglePassBtn ? togglePassBtn.querySelector('i') : null;
+var confirmEyeIcon = toggleConfirmPassBtn ? toggleConfirmPassBtn.querySelector('i') : null;
 
-// Only try to find icons if the buttons exist
-const eyeIcon = togglePassBtn ? togglePassBtn.querySelector('i') : null;
-const confirmEyeIcon = toggleConfirmPassBtn ? toggleConfirmPassBtn.querySelector('i') : null;
-
-//Function to show Bootstrap alert card 
-function showCardMessage(title, message, type = 'danger') {
+//Show Message 
+function showCardMessage(title, message, type) {
     if (!formMessageContainer) return;
 
-    const alertDiv = document.createElement('div');
-    alertDiv.classList.add('alert', `alert-${type}`, 'alert-dismissible', 'fade', 'show', 'shadow-sm');
+    type = type || 'danger';
+
+    var alertDiv = document.createElement('div');
+    alertDiv.className = 'alert alert-' + type + ' alert-dismissible fade show shadow-sm';
     alertDiv.setAttribute('role', 'alert');
 
-    alertDiv.innerHTML = `
-        <strong>${title}</strong> ${message}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    `;
+    alertDiv.innerHTML =
+        '<strong>' + title + '</strong> ' + message +
+        '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>';
 
     formMessageContainer.appendChild(alertDiv);
 
-    // Auto-dismiss after 5 seconds
-    setTimeout(() => {
+    setTimeout(function () {
         if (alertDiv && alertDiv.parentNode) {
-            alertDiv.classList.remove('show');
-            alertDiv.classList.add('hide');
-            // Wait for Bootstrap transition before removing
-            setTimeout(() => alertDiv.remove(), 500);
+            alertDiv.remove();
         }
     }, 5000);
 }
 
-//Password eye toggle logic (with null checks)
+// --- Password Toggle ---
 if (togglePassBtn && passwordInput && eyeIcon) {
-    togglePassBtn.addEventListener('click', () => {
-        const isPassword = passwordInput.type === 'password';
-        passwordInput.type = isPassword ? 'text' : 'password';
-        eyeIcon.classList.replace(isPassword ? 'bi-eye' : 'bi-eye-slash', isPassword ? 'bi-eye-slash' : 'bi-eye');
+    togglePassBtn.addEventListener('click', function () {
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            eyeIcon.classList.replace('bi-eye', 'bi-eye-slash');
+        } else {
+            passwordInput.type = 'password';
+            eyeIcon.classList.replace('bi-eye-slash', 'bi-eye');
+        }
     });
 }
 
 if (toggleConfirmPassBtn && confirmPasswordInput && confirmEyeIcon) {
-    toggleConfirmPassBtn.addEventListener('click', () => {
-        const isPassword = confirmPasswordInput.type === 'password';
-        confirmPasswordInput.type = isPassword ? 'text' : 'password';
-        confirmEyeIcon.classList.replace(isPassword ? 'bi-eye' : 'bi-eye-slash', isPassword ? 'bi-eye-slash' : 'bi-eye');
+    toggleConfirmPassBtn.addEventListener('click', function () {
+        if (confirmPasswordInput.type === 'password') {
+            confirmPasswordInput.type = 'text';
+            confirmEyeIcon.classList.replace('bi-eye', 'bi-eye-slash');
+        } else {
+            confirmPasswordInput.type = 'password';
+            confirmEyeIcon.classList.replace('bi-eye-slash', 'bi-eye');
+        }
     });
 }
 
-// --- 4. Back Arrow Protection: Clear form on page show ---
-window.addEventListener('pageshow', (event) => {
-    if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
-        if (registerForm) registerForm.reset();
+//Clear form on back button
+window.addEventListener('pageshow', function (event) {
+    if (event.persisted && registerForm) {
+        registerForm.reset();
     }
 });
 
-// --- 5. Form submission ---
+//Form Submit
 if (registerForm) {
-    registerForm.addEventListener('submit', async (e) => {
+    registerForm.addEventListener('submit', function (e) {
         e.preventDefault();
 
-        const submitBtn = registerForm.querySelector('button[type="submit"]');
+        
 
-        // --- Frontend validation ---
         if (passwordInput.value.length < 8) {
-            showCardMessage('Error!', 'Password must be at least 8 characters long.', 'danger');
-            passwordInput.focus();
+            showCardMessage('Error!', 'Password must be at least 8 characters long.');
             return;
         }
 
         if (passwordInput.value !== confirmPasswordInput.value) {
-            showCardMessage('Error!', 'Passwords do not match!', 'danger');
-            confirmPasswordInput.focus();
+            showCardMessage('Error!', 'Passwords do not match.');
             return;
         }
 
-        // Prevent Double Submission 
+        var submitBtn = registerForm.querySelector('button[type="submit"]');
         if (submitBtn) {
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Processing...';
+            submitBtn.innerHTML = 'Processing...';
         }
 
-        const formData = {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'actions/To_do_list_signup_api.php', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+
+                if (xhr.status !== 200) {
+                    showCardMessage('Error!', 'System error. Please try again.');
+                    if (submitBtn) submitBtn.disabled = false;
+                    return;
+                }
+
+                try {
+                    var result = JSON.parse(xhr.responseText);
+
+                    if (result.success) {
+                        showCardMessage('Success!', result.message, 'success');
+                        registerForm.reset();
+
+                        setTimeout(function () {
+                            window.location.replace('index.php');
+                        }, 1000);
+
+                    } else {
+                        showCardMessage('Error!', result.message);
+                        if (submitBtn) {
+                            submitBtn.disabled = false;
+                            submitBtn.innerText = 'REGISTER ACCOUNT';
+                        }
+                    }
+
+                } catch (e) {
+                    showCardMessage('Error!', 'ERROR H3J7622HNS');
+                    if (submitBtn) submitBtn.disabled = false;
+                }
+            }
+        };
+
+        xhr.send(JSON.stringify({
             username: usernameInput.value.trim(),
             email: emailInput.value.trim(),
             password: passwordInput.value,
-            confirmPassword: confirmPasswordInput.value,
-        };
-
-        try {
-            const response = await fetch('Controllers/To_do_list_signup_api.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
-            });
-
-            // Get raw text first to handle hidden PHP errors
-            const rawText = await response.text();
-            
-            try {
-                const result = JSON.parse(rawText);
-
-                if (result.success) {
-                    showCardMessage('Success!', result.message, 'success');
-                    registerForm.reset();
-                    // Small delay before redirecting
-                    setTimeout(() => window.location.replace('index.php'), 1000);
-                } else {
-                    showCardMessage('Error!', result.message, 'danger');
-                    if (submitBtn) {
-                        submitBtn.disabled = false;
-                        submitBtn.innerText = 'REGISTER ACCOUNT';
-                    }
-                }
-            } catch (jsonErr) {
-                console.error("Server sent non-JSON response:", rawText);
-                showCardMessage('Error!', 'Server configuration error. Please try again.', 'danger');
-                if (submitBtn) {
-                    submitBtn.disabled = false;
-                    submitBtn.innerText = 'REGISTER ACCOUNT';
-                }
-            }
-
-        } catch (error) {
-            console.error('Network Error:', error);
-            showCardMessage('Error!', 'Connection failed. Please check your internet.', 'danger');
-            if (submitBtn) {
-                submitBtn.disabled = false;
-                submitBtn.innerText = 'REGISTER ACCOUNT';
-            }
-        }
+            confirmPassword: confirmPasswordInput.value
+        }));
     });
 }

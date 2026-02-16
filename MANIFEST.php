@@ -204,25 +204,25 @@ UI & UX BEHAVIOR
 =====================================================
 API / ACTION ENDPOINTS
 =====================================================
-Controllers/To_do_list_signup_api.php
+actions/To_do_list_signup_api.php
 -- Handles new user registration
 
-Controllers/To_do_list_login_api.php
+actions/To_do_list_login_api.php
 -- Handles user authentication
 
-Controllers/To_do_list_add_task_api.php
+actions/To_do_list_add_task_api.php
 -- Creates a new task
 
-Controllers/To_do_list_edit_account_api.php
+actions/To_do_list_edit_account_api.php
 -- edit account details
 
-controllers/ To_do_list_delete_task_api.php
+actions/ To_do_list_delete_task_api.php
 -- Deletes a task
 
-controllers/ To_do_list_add_task_api.php
+actions/ To_do_list_add_task_api.php
 -- Saves a sticky note
 
-controllers/ To_do_list_stickywall_api.php
+actions/ To_do_list_stickywall_api.php
 -- Fetches sticky notes by date
 
       

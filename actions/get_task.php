@@ -1,7 +1,7 @@
 <?php
-
-
-$userTasks = []; 
+require_once 'config/dataconnect.php'; 
+$userTasks = [];
+ 
 
 // 2. Check if the connection exists
 if (isset($conn) && isset($_SESSION['user_id'])) {
@@ -21,8 +21,9 @@ if (isset($conn) && isset($_SESSION['user_id'])) {
         $stmt->bindParam(':uid', $userId, PDO::PARAM_INT);
         $stmt->execute();
         $userTasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    } catch (PDOException $e) {
-        error_log("Database Error: " . $e->getMessage());
+    } catch (Exception $e) {
+        
+        die("ERROR TSK_FETCH_8829");
     }
 }
 

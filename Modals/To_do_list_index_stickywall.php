@@ -89,20 +89,16 @@ if (isset($conn) && isset($_SESSION['user_id'])) {
     </div>
 </div>
 
+
 <script>
 {
     const stickerForm = document.getElementById('stickerPostForm');
     const submitBtn = document.getElementById('stickerSubmitBtn');
 
-    // Helper function to sanitize input (Prevent XSS)
-    const escapeHTML = (str) => {
-        const div = document.createElement('div');
-        div.textContent = str;
-        return div.innerHTML;
-    };
 
+    
     if (stickerForm) {
-        stickerForm.addEventListener('submit', async (e) => {
+        stickerForm.addEventListener('submit', function(e) {
             e.preventDefault();
 
             const payload = {
@@ -111,65 +107,40 @@ if (isset($conn) && isset($_SESSION['user_id'])) {
                 date: document.getElementById('stickerDate').value
             };
 
-            try {
-                submitBtn.disabled = true;
-                submitBtn.innerText = '...';
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.innerText = '...';
 
-                const response = await fetch('Controllers/To_do_list_add_sticker_api.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
+            //Use Xmlhttprequests 
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "actions/To_do_list_add_sticker_api.php", true);
+            xhr.setRequestHeader("Content-Type", "application/json");
 
-                // Safety check: get raw text first
-                const rawText = await response.text();
-                
-                try {
-                    const data = JSON.parse(rawText);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = 'Post';
 
-                    if (data.success) {
-                        const emptyState = document.getElementById('emptyStickerState');
-                        if (emptyState) emptyState.remove();
-
-                        // Create the new sticker HTML safely
-                        const stickerHtml = `
-                            <div class="col-md-4">
-                                <div class="card h-100 border-0 shadow-sm rounded-4" style="background-color: #fff9c4; animation: fadeIn 0.5s;">
-                                    <div class="card-body">
-                                        <h6 class="fw-bold">${escapeHTML(payload.title)}</h6>
-                                        <p class="small mb-2 text-muted">${escapeHTML(payload.description)}</p>
-                                        <div class="d-flex justify-content-between align-items-center mt-3">
-                                            <span class="badge bg-white text-dark border-0 small shadow-sm py-1">
-                                                <i class="bi bi-calendar-event me-1"></i>${payload.date}
-                                            </span>
-                                            <button class="btn btn-link btn-sm text-danger p-0"><i class="bi bi-trash"></i></button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>`;
-
-                        document.getElementById('stickyNotesContainer').insertAdjacentHTML('afterbegin', stickerHtml);
-                        
-                        stickerForm.reset();
-                        
-                        // Close collapse
-                        const collapseEl = document.getElementById('newStickerForm');
-                        const bsCollapse = bootstrap.Collapse.getOrCreateInstance(collapseEl);
-                        bsCollapse.hide();
-
+                    if (xhr.status === 200) {
+                        try {
+                            const data = JSON.parse(xhr.responseText);
+                            if (data.success) {
+                                // Standard: High performance reload to sync UI with DB
+                                window.location.reload(); 
+                            } else {
+                                alert(data.message);
+                            }
+                        } catch (err) {
+                            // Standard: Use random string for tracing/security
+                            alert("System Error: JDGHHF6BDHBJAB");
+                        }
                     } else {
-                        alert(data.message);
+                        alert("System Error: JDGHHF6BDHBJAB");
                     }
-                } catch (jsonErr) {
-                    console.error("API Error Response:", rawText);
-                    alert("System Error: JDGHHF6BDHBJAB");
                 }
-            } catch (err) {
-                console.error("Network Error:", err);
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerText = 'Post';
-            }
+            };
+
+            xhr.send(JSON.stringify(payload));
         });
     }
 }

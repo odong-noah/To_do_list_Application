@@ -1,33 +1,33 @@
-// --- Element References ---
-const loginForm = document.getElementById('loginForm');
-const usernameInput = document.getElementById('username');
-const passwordInput = document.getElementById('password');
-const formMessageContainer = document.getElementById('formMessageContainer');
+//Element References
+var loginForm = document.getElementById('loginForm');
+var usernameInput = document.getElementById('username');
+var passwordInput = document.getElementById('password');
+var formMessageContainer = document.getElementById('formMessageContainer');
 
-// --- Function to show messages ---
-function showMessage(message, type = 'danger') {
-    formMessageContainer.innerHTML = `
-        <div class="alert alert-${type} alert-dismissible fade show" role="alert">
-            ${message}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    `;
+//Show Message 
+function showMessage(message, type) {
+    type = type || 'danger';
+
+    formMessageContainer.innerHTML =
+        '<div class="alert alert-' + type + ' alert-dismissible fade show" role="alert">' +
+            message +
+            '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
+        '</div>';
 }
 
-
-window.addEventListener('pageshow', (event) => {
-    // If the page is loaded from cache (back button), clear everything
-    if (event.persisted || window.performance && window.performance.navigation.type === 2) {
+//Clear form on back button cache 
+window.addEventListener('pageshow', function (event) {
+    if (event.persisted) {
         loginForm.reset();
         formMessageContainer.innerHTML = '';
     }
 });
 
-// --- Password Eye Toggle ---
-const toggleBtn = document.getElementById('togglePassBtn');
-const eyeIcon = document.getElementById('eyeIcon');
+// Password Eye Toggle
+var toggleBtn = document.getElementById('togglePassBtn');
+var eyeIcon = document.getElementById('eyeIcon');
 
-toggleBtn.addEventListener('click', () => {
+toggleBtn.addEventListener('click', function () {
     if (passwordInput.type === 'password') {
         passwordInput.type = 'text';
         eyeIcon.classList.replace('bi-eye', 'bi-eye-slash');
@@ -37,55 +37,63 @@ toggleBtn.addEventListener('click', () => {
     }
 });
 
-loginForm.addEventListener('submit', async (e) => {
+//Form Submit
+loginForm.addEventListener('submit', function (e) {
     e.preventDefault();
-    
-    const loginData = {
-        username: usernameInput.value.trim(),
-        password: passwordInput.value
+
+    var username = usernameInput.value.trim();
+    var password = passwordInput.value;
+
+    // Basic integrity validation
+    if (username === '' || password === '') {
+        showMessage('All fields are required.');
+        return;
+    }
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'actions/To_do_list_login_api.php', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+
+            if (xhr.status !== 200) {
+                showMessage('System Error. Please try again.');
+                return;
+            }
+
+            try {
+                var result = JSON.parse(xhr.responseText);
+
+                if (result.success) {
+                    showMessage('Login successful!', 'success');
+                    loginForm.reset();
+
+                    setTimeout(function () {
+                        formMessageContainer.innerHTML = '';
+                        window.location.href = result.redirect;
+                    }, 1000);
+
+                } else {
+                    showMessage(result.message);
+                    passwordInput.value = '';
+                }
+
+            } catch (e) {
+                // Error code must originate from server
+                showMessage('ERROR H3J7622HNS');
+            }
+        }
     };
 
-    try {
-        const response = await fetch('Controllers/To_do_list_login_api.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(loginData)
-        });
-
-        const rawText = await response.text();
-        
-        try {
-            const result = JSON.parse(rawText);
-            
-            if (result.success) {
-               
-                showMessage("Login successful!", "success");
-
-                loginForm.reset();
-
-                //  Wait 1 second, then clear notification and redirect
-                setTimeout(() => {
-                    formMessageContainer.innerHTML = ''; // Make notification disappear
-                    window.location.href = result.redirect;
-                }, 1000);
-
-            } else {
-                showMessage(result.message, "danger");
-                passwordInput.value = ''; // Clear password on failed attempt for security
-            }
-        } catch (jsonErr) {
-            console.error("Server sent non-JSON response:", rawText);
-            showMessage("System Error: JDGHHF6BDHBJAB", "danger");
-        }
-
-    } catch (error) {
-        console.error("Network Error:", error);
-        showMessage("Connection failed. Please try again.", "danger");
-    }
+    xhr.send(JSON.stringify({
+        username: username,
+        password: password
+    }));
 });
 
-    // 1. Prevent the user from clicking 'Forward' back into the dashboard
-    window.history.pushState(null, null, window.location.href);
-    window.onpopstate = function () {
-        window.history.go(1);
-    };
+//Prevent forward/back dashboard access (client-side assist only)
+window.history.pushState(null, null, window.location.href);
+window.onpopstate = function () {
+    window.history.go(1);
+};

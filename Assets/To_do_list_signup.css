@@ -1,4 +1,4 @@
-/* ===== Background & Centering ===== */
+/*Background & Centering */
 body {
     margin: 0;
     min-height: 100vh;
@@ -30,13 +30,13 @@ body {
     text-align: center;
 }
 
-/* ===== Labels ===== */
+/* Labels*/
 label {
     font-weight: 600;
     margin-bottom: 6px;
 }
 
-/* ===== Inputs ===== */
+/*Inputs */
 .form-control {
     background: rgba(255,255,255,0.15);
     border: none;
@@ -55,7 +55,7 @@ label {
     box-shadow: none;
 }
 
-/* ===== Input Icons ===== */
+/* Input Icons */
 .input-group-text {
     background: rgba(255,255,255,0.15);
     border: none;
@@ -64,7 +64,7 @@ label {
 .icon-user { color: #38bdf8; }
 .icon-lock { color: #facc15; }
 
-/* ===== Button ===== */
+/* Button */
 .btn-login {
     background: linear-gradient(135deg, #2563eb, #06b6d4);
     border: none;
@@ -78,7 +78,7 @@ label {
     box-shadow: 0 10px 25px rgba(0,0,0,0.4);
 }
 
-/* ===== Links ===== */
+/*Links */
 .signup-link {
     color: #38bdf8;
     text-decoration: none;
@@ -94,7 +94,7 @@ label {
     cursor: pointer;
 }
 
-/* ===== Password Strength Meter ===== */
+/*Password Strength Meter*/
 .strength-meter {
     height: 6px;
     width: 100%;
