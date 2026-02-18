@@ -11,7 +11,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
    
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="assets/To_do_list_signup.css">
+    <link rel="stylesheet" href="assets/css/To_do_list_signup.css">
 </head>
 
 
@@ -111,7 +111,7 @@
 
 
 <!-- Link to external JS -->
-<script src="assets/To_do_list_signup.js"></script>
+<script src="assets/js/To_do_list_signup.js"></script>
 
 </body>
 </html>

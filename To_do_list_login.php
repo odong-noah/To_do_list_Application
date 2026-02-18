@@ -12,7 +12,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="assets/To_do_list_login.css">
+    <link rel="stylesheet" href="assets/css/To_do_list_login.css">
 </head>
 
 
@@ -76,7 +76,7 @@
     </div>
 </div>
 
-<script src="assets/To_do_list_login.js"></script>
+<script src="assets/js/To_do_list_login.js"></script>
 
 </body>
 </html>

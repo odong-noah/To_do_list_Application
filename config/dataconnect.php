@@ -6,8 +6,8 @@ date_default_timezone_set('America/Los_Angeles');
 
 $servername = "localhost";
 $dbname     = "to_do_list";
-$username   = "root";
-$password   = "";
+$username   = "todo_admin"; 
+$password   = "Noah";       
 
 try {
     $conn = new PDO(
@@ -18,7 +18,7 @@ try {
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
     error_log($e->getMessage());
-    die("Database connection failed.");
+    die("Database connection failed: " . $e->getMessage());
 }
 
 // Helper function
