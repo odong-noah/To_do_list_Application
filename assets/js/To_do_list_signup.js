@@ -10,21 +10,15 @@ var formMessageContainer = document.getElementById('formMessageContainer');
 var eyeIcon = togglePassBtn ? togglePassBtn.querySelector('i') : null;
 var confirmEyeIcon = toggleConfirmPassBtn ? toggleConfirmPassBtn.querySelector('i') : null;
 
-
-   
 function isValidEmail(email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
 }
 
-
 //Show Message 
 function showCardMessage(title, message, type) {
     if (!formMessageContainer) return;
     type = type || 'danger';
-
-
-
     var alertDiv = document.createElement('div');
     alertDiv.className = 'alert alert-' + type + ' alert-dismissible fade show shadow-sm';
     alertDiv.setAttribute('role', 'alert');
@@ -81,7 +75,6 @@ if (!isValidEmail(email)) {
         showCardMessage('Failed!', 'Please enter a valid email address.');
         return;
 }
-
    
     // Regex patterns evaluated now
     const hasLetter = /[A-Za-z]/.test(password);
