@@ -6,8 +6,8 @@ date_default_timezone_set('America/Los_Angeles');
 
 $servername = "localhost";
 $dbname     = "to_do_list";
-$username   = "todo_admin"; 
-$password   = "Noah";       
+$username   = "root"; 
+$password   = "";       
 
 try {
     $conn = new PDO(
