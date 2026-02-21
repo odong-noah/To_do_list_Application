@@ -1,18 +1,10 @@
 <?php
 require_once '../config/dataconnect.php';
 
-ini_set('display_errors', 0);
-error_reporting(E_ALL);
-
-// Start Buffer and Session
-ob_start(); 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
 // Secure JSON Headers
 header('Content-Type: application/json; charset=utf-8');
 header("X-Content-Type-Options: nosniff");
+
 
 try {
     // Force POST Method
@@ -26,8 +18,6 @@ try {
         throw new Exception("Invalid Input Format");
     }
 
-   
-    
     // Username logic
     $username = '';
     if (isset($inputData['username'])) {
@@ -62,11 +52,18 @@ try {
         echo json_encode(["success" => false, "message" => "Invalid email address."]);
         exit;
     }
-
-    if (strlen($password) < 8) {
-        echo json_encode(["success" => false, "message" => "Password must be at least 8 characters."]);
-        exit;
-    }
+if (
+    strlen($password) < 8 ||
+    !preg_match('/[A-Za-z]/', $password) ||   
+    !preg_match('/\d/', $password) ||          
+    !preg_match('/[\W_]/', $password)          
+) {
+    echo json_encode([
+        "success" => false,
+        "message" => "Password must be at least 8 characters and include letters, numbers, and special characters."
+    ]);
+    exit;
+}
 
     if ($password !== $confirm) {
         echo json_encode(["success" => false, "message" => "Passwords do not match."]);
@@ -91,7 +88,7 @@ try {
     }
 
     // Secure Password Hashing
-    $hashedPassword = password_hash($password, PASSWORD_BCRYPT, ["cost" => 12]);
+    $hashedPassword = password_hash($password, PASSWORD_BCRYPT, ["cost" => 10]);
 
     //Insert (Using Named Parameters, NO question marks)
     $insertUserStmt = $conn->prepare("
@@ -111,24 +108,15 @@ try {
             "message" => "Account created successfully!"
         ]);
     } else {
-        throw new Exception("Insert failed");
+        throw new Exception("Account creation failed");
     }
 
 }  catch (Throwable $e) {
 
     echo json_encode([
         "success" => false, 
-        "message" => "ERROR jhfjjhkf"
+        "message" => "ggjhfjjhkf"
     ]);
     die();
 }
 
- //Helper function ensure it exists
-
-if (!function_exists('clean_string')) {
-    function clean_string($data) {
-        return htmlspecialchars(strip_tags(trim($data)));
-    }
-}
-
-ob_end_flush();
