@@ -18,9 +18,8 @@ try {
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
     error_log($e->getMessage());
-    die("Database connection failed: " . $e->getMessage());
+    die("Database connection failed. Please try again later.");
 }
-
 // Helper function
 function clean_string($string_val) {
     if ($string_val === null) {
