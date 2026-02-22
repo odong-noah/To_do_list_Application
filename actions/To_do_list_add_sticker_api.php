@@ -1,8 +1,11 @@
 <?php
-require_once '../config/dataconnect.php'; 
-
 header('Content-Type: application/json');
-session_start();
+require_once '../config/dataconnect.php'; 
+require_once 'config/dataconnect.php';
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 //Auth Check
 if (!isset($_SESSION['user_id'])) {
@@ -19,13 +22,16 @@ if (!$data || empty($data['title']) || empty($data['date'])) {
     exit;
 }
 
+    $toDostickyId = 'TODO_' . str_replace('.', '', uniqid('', true));
+
 try {
     $sql = "INSERT INTO to_do_list_stickywall 
-            (to_do_list_user_id, to_do_list_stickywall_date, to_do_list_stickywall_title, to_do_list_stickywall_description) 
-            VALUES (:uid, :sdate, :stitle, :sdesc)";
+            (to_do_list_stickywall_id,to_do_list_user_id, to_do_list_stickywall_date, to_do_list_stickywall_title, to_do_list_stickywall_description) 
+            VALUES (:stickyid,:uid, :sdate, :stitle, :sdesc)";
     
     $stmt = $conn->prepare($sql);
     $result = $stmt->execute([
+        ':stickyid' =>$toDostickyId,
         ':uid'    => $_SESSION['user_id'],
         ':sdate'  => $data['date'],
         ':stitle' => $data['title'],
@@ -37,7 +43,7 @@ try {
     } else {
         echo json_encode(['success' => false, 'message' => 'Failed to save to database.']);
     }
-} catch (Exception $e) {
-   
-    die("ERROR STK_DB_991HH");
+}  catch (Exception $e) {
+    echo json_encode(['success' => false, 'message' => 'Server error']);
+    exit;
 }
