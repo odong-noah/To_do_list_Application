@@ -90,17 +90,20 @@ if (
     // Secure Password Hashing
     $hashedPassword = password_hash($password, PASSWORD_BCRYPT, ["cost" => 10]);
 
+
+    $toDoUserId = 'TODO_' . str_replace('.', '', uniqid('', true));
+
     //Insert (Using Named Parameters, NO question marks)
-    $insertUserStmt = $conn->prepare("
-        INSERT INTO to_do_list_user 
-            (to_do_list_user_username, to_do_list_user_email, to_do_list_user_password) 
-        VALUES 
-            (:username, :email, :password)
-    ");
-    
-    $insertUserStmt->bindParam(':username', $username, PDO::PARAM_STR);
-    $insertUserStmt->bindParam(':email', $email, PDO::PARAM_STR);
-    $insertUserStmt->bindParam(':password', $hashedPassword, PDO::PARAM_STR);
+  $insertUserStmt = $conn->prepare("
+    INSERT INTO to_do_list_user 
+        (to_do_list_user_id,to_do_list_user_username,to_do_list_user_email,to_do_list_user_password) 
+    VALUES(:user_id,:username,:email,:password)
+");
+
+$insertUserStmt->bindParam(':user_id', $toDoUserId, PDO::PARAM_STR);
+$insertUserStmt->bindParam(':username', $username, PDO::PARAM_STR);
+$insertUserStmt->bindParam(':email', $email, PDO::PARAM_STR);
+$insertUserStmt->bindParam(':password', $hashedPassword, PDO::PARAM_STR);
 
     if ($insertUserStmt->execute()) {
         echo json_encode([
