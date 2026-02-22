@@ -12,13 +12,42 @@ if (isset($conn) && isset($_SESSION['user_id'])) {
     $userStickers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 ?>
+<style>
+/* White modal content (already applied inline, but reinforcing) */
+.modal-content {
+    background-color: #ffffff !important;
+}
 
+/* Transparent modal backdrop */
+.modal-backdrop.show {
+    background-color: rgba(0, 0, 0, 0.2); /* light transparent black */
+}
 
-<!-- Add sticker modal -->
+/* Optional: smooth shadow to separate modal from transparent backdrop */
+.modal-content {
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
+}
+</style>
+
+<!-- Success Modal -->
+<div class="modal fade" id="stickerSuccessModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 shadow"> 
+            <div class="modal-body text-center py-4">
+                <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
+                <h5 class="mt-3 fw-bold">Sticker Added Successfully!</h5>
+                <button type="button" class="btn btn-success mt-3 px-4" data-bs-dismiss="modal">
+                    OK
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Sticker Modal -->
 <div class="modal fade" id="stickyWallModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content rounded-4 shadow border-0">
-
             <div class="modal-header border-0 pb-0">
                 <h5 class="modal-title fw-bold">
                     <i class="bi bi-stickies text-warning me-2"></i>Sticky Wall
@@ -59,47 +88,50 @@ if (isset($conn) && isset($_SESSION['user_id'])) {
             </div>
 
             <div class="modal-body px-4 pt-0">
-                <div class="row g-3" id="stickyNotesContainer">
-                    <?php if (empty($userStickers)) { ?>
-                        <div class="col-12 text-center py-5" id="emptyStickerState">
-                            <i class="bi bi-emoji-expressionless text-muted opacity-50" style="font-size: 3rem;"></i>
-                            <h5 class="text-muted mt-3">No stickers present</h5>
-                            <p class="small text-muted">Click "Add Sticker" to start!</p>
-                        </div>
-                    <?php } else { 
-                        foreach ($userStickers as $sticker) { ?>
-                            <div class="col-md-4">
-                                <div class="card h-100 border-0 shadow-sm rounded-4" style="background-color: #fff9c4;">
-                                    <div class="card-body">
-                                        <h6 class="fw-bold"><?php echo htmlspecialchars($sticker['title']); ?></h6>
-                                        <p class="small mb-2 text-muted"><?php echo htmlspecialchars($sticker['description']); ?></p>
-                                        <div class="d-flex justify-content-between align-items-center mt-3">
-                                            <span class="badge bg-white text-dark border-0 small shadow-sm py-1">
-                                                <i class="bi bi-calendar-event me-1"></i><?php echo $sticker['date']; ?>
-                                            </span>
-                                            <button class="btn btn-link btn-sm text-danger p-0"><i class="bi bi-trash"></i></button>
+                <div class="sticky-slider-container" style="max-height: 400px; overflow-y: auto; overflow-x: hidden;">
+                    <div class="row g-3" id="stickyNotesContainer">
+                        <?php if (empty($userStickers)) { ?>
+                            <div class="col-12 text-center py-5" id="emptyStickerState">
+                                <i class="bi bi-emoji-expressionless text-muted opacity-50" style="font-size: 3rem;"></i>
+                                <h5 class="text-muted mt-3">No stickers present</h5>
+                                <p class="small text-muted">Click "Add Sticker" to start!</p>
+                            </div>
+                        <?php } else { 
+                            foreach ($userStickers as $sticker) { ?>
+                                <div class="col-md-4">
+                                    <div class="card h-100 border-0 shadow-sm rounded-4" style="background-color: #fff9c4;">
+                                        <div class="card-body">
+                                            <h6 class="fw-bold"><?php echo htmlspecialchars($sticker['title']); ?></h6>
+                                            <p class="small mb-2 text-muted"><?php echo htmlspecialchars($sticker['description']); ?></p>
+                                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                                <span class="badge bg-white text-dark border-0 small shadow-sm py-1">
+                                                    <i class="bi bi-calendar-event me-1"></i><?php echo $sticker['date']; ?>
+                                                </span>
+                                                <button class="btn btn-link btn-sm text-danger p-0"><i class="bi bi-trash"></i></button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        <?php } 
-                    } ?>
+                            <?php } 
+                        } ?>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <!--Javascript logic for the add Sticker API-->
 <script>
 {
     const stickerForm = document.getElementById('stickerPostForm');
     const submitBtn = document.getElementById('stickerSubmitBtn');
 
-
-    
     if (stickerForm) {
+
         stickerForm.addEventListener('submit', function(e) {
             e.preventDefault();
 
@@ -109,35 +141,96 @@ if (isset($conn) && isset($_SESSION['user_id'])) {
                 date: document.getElementById('stickerDate').value
             };
 
-            // Show loading state
+            // Basic validation (extra safety)
+            if (!payload.title || !payload.description || !payload.date) {
+                alert("Please fill in all fields.");
+                return;
+            }
+
+            // Loading state
             submitBtn.disabled = true;
             submitBtn.innerText = '...';
 
-            //Use Xmlhttprequests 
             const xhr = new XMLHttpRequest();
             xhr.open("POST", "actions/To_do_list_add_sticker_api.php", true);
             xhr.setRequestHeader("Content-Type", "application/json");
 
             xhr.onreadystatechange = function () {
+
                 if (xhr.readyState === 4) {
+
                     submitBtn.disabled = false;
                     submitBtn.innerText = 'Post';
 
                     if (xhr.status === 200) {
+
                         try {
                             const data = JSON.parse(xhr.responseText);
-                            if (data.success) {
-                                // Standard: High performance reload to sync UI with DB
-                                window.location.reload(); 
-                            } else {
-                                alert(data.message);
+
+                          if (data.success) {
+
+                                const container = document.getElementById('stickyNotesContainer');
+
+                                // Remove empty state if exists
+                                const emptyState = document.getElementById('emptyStickerState');
+                                if (emptyState) {
+                                    emptyState.remove();
+                                }
+
+                                const newCard = `
+                                    <div class="col-md-4">
+                                        <div class="card h-100 border-0 shadow-sm rounded-4" style="background-color: #fff9c4;">
+                                            <div class="card-body">
+                                                <h6 class="fw-bold">${payload.title}</h6>
+                                                <p class="small mb-2 text-muted">${payload.description}</p>
+                                                <div class="d-flex justify-content-between align-items-center mt-3">
+                                                    <span class="badge bg-white text-dark border-0 small shadow-sm py-1">
+                                                        <i class="bi bi-calendar-event me-1"></i>${payload.date}
+                                                    </span>
+                                                    <button class="btn btn-link btn-sm text-danger p-0">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+
+                                container.insertAdjacentHTML('afterbegin', newCard);
+
+                                stickerForm.reset();
+
+                                // STICKY WALL MODAL
+                                const stickyModalEl = document.getElementById('stickyWallModal');
+                                const stickyModal = bootstrap.Modal.getOrCreateInstance(stickyModalEl);
+
+                                stickyModal.hide();
+
+                               // Show success modal and reload dashboard on OK click
+                            stickyModalEl.addEventListener('hidden.bs.modal', function () {
+
+                                const successModalEl = document.getElementById('stickerSuccessModal');
+                                const successModal = bootstrap.Modal.getOrCreateInstance(successModalEl);
+                                successModal.show();
+
+                                // Add listener for OK button inside success modal
+                                const okBtn = successModalEl.querySelector('button[data-bs-dismiss="modal"]');
+                                okBtn.addEventListener('click', function() {
+                                    // Reload the dashboard or the whole page
+                                    window.location.reload();
+                                }, { once: true }); // only once
+                            }, { once: true });
+                            }else {
+                                alert(data.message || "Something went wrong.");
                             }
+
                         } catch (err) {
-                            // Standard: Use random string for tracing/security
+                            console.error("Invalid JSON:", xhr.responseText);
                             alert("System Error: JDGHHF6BDHBJAB");
                         }
+
                     } else {
-                        alert("System Error: JDGHHF6BDHBJAB");
+                        alert("Server Error. Please try again.");
                     }
                 }
             };
